@@ -5,7 +5,7 @@ import { PostagemService } from "./services/postagem.service";
 import { PostagemController } from "./controllers/postagem.controller";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Postagem])], // Criando estrutura da tabela, que é a classe Model.
+    imports: [TypeOrmModule.forFeature([Postagem])], // ForFeature indica quem é a classe Model. Criando estrutura da tabela, que é a classe Model.
     providers: [PostagemService],
     controllers: [PostagemController],
     exports: [TypeOrmModule] // Gerar tabela do banco de dados, disponibilizando para outras classes.

@@ -3,10 +3,10 @@ import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeor
 
 
 // Classe para verificar o Modelo de dados ou validação.
-@Entity({name: "tb_postagem"})
+@Entity({name: "tb_postagem"}) // O decorador: Entity cria a tabela no banco de dados. Informar o nome da tabela a ser criada, caso contrário a tabela é criada com o nome da classe. 
 export class Postagem{
 
-    @PrimaryGeneratedColumn() // Chave primária e Auto_Increment
+    @PrimaryGeneratedColumn() // Chave primária e (GeneratedColumn) é o Auto Increment.
     id: number;
 
     @IsNotEmpty() // Não aceita espaço em branco.
@@ -14,7 +14,7 @@ export class Postagem{
     titulo: string;
 
     @IsNotEmpty()
-    @Column({length: 100, nullable: false})
+    @Column({length: 1000, nullable: false})
     texto: string;
 
     @UpdateDateColumn() // atualizar data automáticamentw.
