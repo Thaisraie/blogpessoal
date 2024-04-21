@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Postagem } from './postagem/entities/postagem.entity';
 import { PostagemModule } from './postagem/postagem.module';
+import { TemaModule } from './tema/tema.module';
+import { Tema } from './tema/entities/tema.entity';
+import { Module } from '@nestjs/common';
 
 // Criando módulo de postagem para ter acesso a controladora. Na classe Main é utilizada essa classe para construir o projeto, precisa registrar todos os módulos para funcionar.
 @Module({
@@ -15,11 +15,11 @@ import { PostagemModule } from './postagem/postagem.module';
       username: 'root', // Nome do usúario do banco de dados.
       password: 'root', // Senha do banco de dados.
       database: 'db_blogpessoal', // Nome do banco de dados.
-      entities: [Postagem], // Array com a classe model, "Postagem" é a tabela criada no banco de dados.
+      entities: [Postagem, Tema], // Array com a classe model, "Postagem" é a tabela criada no banco de dados.
       synchronize: true, // Propriedade que sincroniza o sistema com o banco de dados.
       logging: true, // Visualizar a consulta sql no terminal.
     }),
-    PostagemModule
+    PostagemModule, TemaModule
   ],
   controllers: [],
   providers: [],

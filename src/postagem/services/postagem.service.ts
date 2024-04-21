@@ -1,24 +1,27 @@
+﻿import { TemaService } from './../../tema/services/tema.service';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Postagem } from "../entities/postagem.entity";
 import { DeleteResult, ILike, Repository } from "typeorm";
 
-// Classe de serviço. Classe composta por regras da aplicação tais como; cadastrar, atualizar e deletar.
-@Injectable() // Decorador indica que a classe é provider pode ser injetada em outra classe. 
+@Injectable()
 export class PostagemService{
     constructor(
         @InjectRepository(Postagem)
-        private postagemRepository: Repository<Postagem>
-
+        private postagemRepository: Repository<Postagem>,
+        private temaService: TemaService
     ){}
 
+    // Await espera a resposta da promisse e não trava o sistema
+    // Método find criando uma promessa "um array" com  obejtos postagens. Busca todas as postagens do banco de dados
     async findAll(): Promise<Postagem[]>{
-        return await this.postagemRepository.find(); 
-         // Await espera a resposta da promisse e não trava o sistema
-        // Método find criando uma promessa "um array" com  obejtos postagens. Busca todas as postagens do banco de dados
+        return await this.postagemRepository.find({
+            relations: {
+                tema: true
+            }
+        });
 
-        // SELECT * FROM tb_postagem;
-    
+        // SELECT * FROM tb_postagens;
     }
 
     async findById(id: number): Promise<Postagem> {
@@ -27,51 +30,87 @@ export class PostagemService{
         let postagem = await this.postagemRepository.findOne({
             where:{
                 id
+            },
+            relations: {
+                tema: true
             }
         });
-        
-        // Checar se a postagem não foi encontrada.
+
+        // Checar se a postagem não foi encontrada
         if (!postagem)
             throw new HttpException('Postagem não encontrada!', HttpStatus.NOT_FOUND);
 
-        // Retornar a postagem, caso ela exista.
+        // Retornar a postagem, caso ela exista
         return postagem;
 
-        // SELECT * FROM tb_postagem where id = ?;
+        // SELECT * FROM tb_postagens WHERE id = ?;
     }
 
     async findByTitulo(titulo: string): Promise<Postagem[]>{
         return await this.postagemRepository.find({
             where:{
-                titulo: ILike(`%${titulo}%`) // "ILike" case sensitive traz a busca por texto tanto maiúsculo quanto minúsculo. 
+                titulo: ILike(`%${titulo}%`)
+            },
+            relations: {
+                tema: true
             }
         })
-        // SELECT * FROM tb_postagem where título LIKE '%titulo%';
+
+        // SELECT * FROM tb_postagens WHERE titulo LIKE '%titulo%';
     }
 
     async create(postagem: Postagem): Promise<Postagem>{
-        return await this.postagemRepository.save(postagem);
-    }
-    // INSERT INTO tb_postagem passando os atributos: titulo, texto data e valor 
 
-    async update(postagem: Postagem): Promise<Postagem>{
+        // Caso o tema tenha sido preenchido
+        if (postagem.tema){
 
-        let buscaPostagem: Postagem = await this.findById(postagem.id);
+            let tema = await this.temaService.findById(postagem.tema.id)
 
-            if (!buscaPostagem || !postagem.id)
-                throw new HttpException('Postagem não foi encontrada!', HttpStatus.NOT_FOUND)
+            if(!tema)
+                throw new HttpException('Tema não foi encontrado!', HttpStatus.NOT_FOUND)
 
             return await this.postagemRepository.save(postagem);
         }
-    // UPDATE tb_postagens SET titulo = ?, texto = ?, data = server WHERE id = ?;
+
+        // Caso o tema não tenha sido preenchido
+        return await this.postagemRepository.save(postagem);
+
+         // INSERT INTO tb_postagens (titulo, texto, data) VALUES (?, ?, server);
+    }
+
+    async update(postagem: Postagem): Promise<Postagem>{
+        
+        let buscaPostagem: Postagem = await this.findById(postagem.id);
+        
+        // Verifica se a postagem existe
+        if (!buscaPostagem || !postagem.id)
+            throw new HttpException('Postagem não foi encontrada!', HttpStatus.NOT_FOUND)
+
+         // Caso o tema tenha sido preenchido
+        if (postagem.tema){
+
+            let tema = await this.temaService.findById(postagem.tema.id)
+
+            if(!tema)
+                throw new HttpException('Tema não foi encontrado!', HttpStatus.NOT_FOUND)
+
+            return await this.postagemRepository.save(postagem);
+        }
+
+        return await this.postagemRepository.save(postagem);
+
+         // UPDATE tb_postagens SET titulo = ?, texto = ?, data = server WHERE id = ?;
+
+    }
 
     async delete(id: number): Promise<DeleteResult>{
+        
+        let buscaPostagem: Postagem = await this.findById(id);
+        
+        if (!buscaPostagem)
+            throw new HttpException('Postagem não foi encontrada!', HttpStatus.NOT_FOUND)
 
-        let buscaPostagem: Postagem = await this.findById(id);  // Verifica se a postagem existe.
-
-            if (!buscaPostagem) 
-                throw new HttpException('Postagem não foi encontrada!', HttpStatus.NOT_FOUND)
-
-            return await this.postagemRepository.delete(id); // Se existe ela apaga.
-        }
+        return await this.postagemRepository.delete(id);
+        
+    }
 }
