@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
 import { PostagemService } from "../services/postagem.service";
 import { Postagem } from "../entities/postagem.entity";
 
@@ -14,8 +14,8 @@ export class PostagemController{
         return this.postagemService.findAll();
     }
 
-    @Get('/:id') // Quando utilizado : é uma variável de caminho. 
-    @HttpCode(HttpStatus.OK) // Inserir o decorador  @param (parâmetro) e converter para número inteiro "ParseIntPipe".
+    @Get('/:id') // Quando utilizado ":" é uma variável de caminho. 
+    @HttpCode(HttpStatus.OK) // Inserir o decorador  @param (parâmetro) e converter para número inteiro (ParseIntPipe).
     findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem>{
         return this.postagemService.findById(id);
     }
@@ -24,5 +24,24 @@ export class PostagemController{
     @HttpCode(HttpStatus.OK)
     findByTitulo(@Param('titulo') titulo: string): Promise<Postagem[]>{
         return this.postagemService.findByTitulo(titulo);
+    } 
+
+    @Post() // Post envia algo para o banco 
+    @HttpCode(HttpStatus.CREATED) // Http create pois está criando devolve o status 201
+    // Método recebe o parâmetro do corpo e não do caminho por isso utiliza o @body.
+    create(@Body() postagem: Postagem): Promise<Postagem> {
+        return this.postagemService.create(postagem);
+    }
+
+    @Put() 
+    @HttpCode(HttpStatus.OK)
+    update(@Body() postagem: Postagem): Promise<Postagem> {
+        return this.postagemService.update(postagem);
+    }
+    
+    @Delete('/:id') 
+    @HttpCode(HttpStatus.NO_CONTENT) // Conteúdo não existe, Status 204 
+    delete(@Param('id', ParseIntPipe) id: number){
+        return this.postagemService.delete(id);
     } 
 }
