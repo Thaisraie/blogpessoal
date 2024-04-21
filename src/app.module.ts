@@ -16,7 +16,8 @@ import { PostagemModule } from './postagem/postagem.module';
       password: 'root', // Senha do banco de dados.
       database: 'db_blogpessoal', // Nome do banco de dados.
       entities: [Postagem], // Array com a classe model, "Postagem" é a tabela criada no banco de dados.
-      synchronize: true, // Propriedade que sincroniza o sistema com o banco de dados. 
+      synchronize: true, // Propriedade que sincroniza o sistema com o banco de dados.
+      logging: true, // Visualizar a consulta sql no terminal.
     }),
     PostagemModule
   ],

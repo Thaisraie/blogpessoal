@@ -1,3 +1,4 @@
+import { Transform, TransformFnParams } from "class-transformer";
 import { IsNotEmpty } from "class-validator";
 import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -9,10 +10,13 @@ export class Postagem{
     @PrimaryGeneratedColumn() // Chave primária e (GeneratedColumn) é o Auto Increment.
     id: number;
 
+    // Validação para espaços em branco. 
+    @Transform(({ value }: TransformFnParams) => value?.trim())
     @IsNotEmpty() // Não aceita espaço em branco.
     @Column({length: 100, nullable: false}) // Tamanho da postagem e definir que é obrigatório.
     titulo: string;
 
+    @Transform(({ value }: TransformFnParams) => value?.trim())
     @IsNotEmpty()
     @Column({length: 1000, nullable: false})
     texto: string;

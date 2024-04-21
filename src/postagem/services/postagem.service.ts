@@ -74,5 +74,4 @@ export class PostagemService{
 
             return await this.postagemRepository.delete(id); // Se existe ela apaga.
         }
-
 }
