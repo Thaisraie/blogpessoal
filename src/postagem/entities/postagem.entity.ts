@@ -2,6 +2,7 @@ import { Transform, TransformFnParams } from "class-transformer";
 import { IsNotEmpty } from "class-validator";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Tema } from "../../tema/entities/tema.entity";
+import { Usuario } from "src/usuario/entities/usuario.entity";
 
 
 // Classe para verificar o Modelo de dados ou validação.
@@ -25,8 +26,14 @@ export class Postagem{
     @UpdateDateColumn() // atualizar data automáticamentw.
     date: Date;
 
+    // Classe postagem com duas chaves estramgeiras sendo, 01 relacionado a tema a outra relacionado com o usúario.
     @ManyToOne(() => Tema, (tema) => tema.postagem, {
         onDelete: "CASCADE"
     })
     tema: Tema; // Chave Estrangeira
+
+    @ManyToOne(() => Usuario, (usuario) => usuario.postagem, {
+        onDelete: "CASCADE"
+    })
+    usuario: Usuario;
 }

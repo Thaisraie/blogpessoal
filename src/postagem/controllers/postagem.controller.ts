@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
 import { PostagemService } from "../services/postagem.service";
 import { Postagem } from "../entities/postagem.entity";
+import { JwtAuthGuard } from "src/auth/guard/jwt.auth.guard";
 
 // Classe responsável por fornecer os endpoints, (endereço de acesso a API). Classe que verifica a disponibilidade do endpoints se está ou não acessivel ou resposta da requisição errada.
+@UseGuards(JwtAuthGuard)
 @Controller("/postagens")
 export class PostagemController{
 
@@ -33,7 +35,7 @@ export class PostagemController{
         return this.postagemService.create(postagem);
     }
 
-    @Put() 
+    @Put() // Atualiza uma postagem.
     @HttpCode(HttpStatus.OK)
     update(@Body() postagem: Postagem): Promise<Postagem> {
         return this.postagemService.update(postagem);
