@@ -13,6 +13,7 @@ import { UsuarioModule } from './usuario/usuario.module';
   imports: [
     TypeOrmModule.forRoot({ // Configurar acesso ao banco de dados "For root" usado por toda aplicação.
       type: 'mysql', // Instrução de acesso: Banco de dados utilizado.
+      
       host: 'localhost', // Onde está o banco.
       port: 3306, // Indicando a porta.
       username: 'root', // Nome do usúario do banco de dados.

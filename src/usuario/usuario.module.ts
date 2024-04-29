@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.Entity';
 import { UsuarioService } from './services/usuario.service';
 import { UsuarioController } from './controllers/usuario.controller';
-import { Bcrypt } from 'src/auth/bcrypt/bcrypt';
+import { Bcrypt } from '../auth/bcrypt/bcrypt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Usuario])], 
