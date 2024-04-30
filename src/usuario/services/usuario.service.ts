@@ -30,7 +30,6 @@ export class UsuarioService {
                 }
             }
         );
-
     }
 
     async findById(id: number): Promise<Usuario> {
@@ -48,7 +47,6 @@ export class UsuarioService {
             throw new HttpException('Usuario não encontrado!', HttpStatus.NOT_FOUND);
 
         return usuario;
-
     }
 
     // Método checa se o usúario existe 
@@ -62,10 +60,12 @@ export class UsuarioService {
         }
 
         throw new HttpException("O Usuario ja existe!", HttpStatus.BAD_REQUEST);
-
     }
 
     async update(usuario: Usuario): Promise<Usuario> {
+
+        if(!usuario.id)
+            throw new HttpException("Por favor, informar o Id", HttpStatus.BAD_REQUEST);
 
         // Checagem de Id e e-mail se pertence ao mesmo usúario para atualizar.
         let updateUsuario: Usuario = await this.findById(usuario.id);
@@ -79,7 +79,5 @@ export class UsuarioService {
 
         usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha)
         return await this.usuarioRepository.save(usuario);
-
     }
-
 }

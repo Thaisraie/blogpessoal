@@ -22,7 +22,7 @@ export class UsuarioController{
     findById(@Param('id', ParseIntPipe) id: number): Promise<Usuario>{
         return this.usuarioService.findById(id)
     }
-
+    
     @Post('/cadastrar')
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() usuario: Usuario): Promise<Usuario>{

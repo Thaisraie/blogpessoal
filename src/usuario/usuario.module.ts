@@ -11,6 +11,6 @@ import { Bcrypt } from '../auth/bcrypt/bcrypt';
   imports: [TypeOrmModule.forFeature([Usuario])], 
   providers: [UsuarioService, Bcrypt],
   controllers: [UsuarioController],
-  exports: [UsuarioService], // Registrar para fazer a autenticação.
+  exports: [TypeOrmModule, UsuarioService], // Registrar para fazer a autenticação.
 })
 export class UsuarioModule {}

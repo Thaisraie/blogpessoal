@@ -13,13 +13,13 @@ import { UsuarioModule } from './usuario/usuario.module';
   imports: [
     TypeOrmModule.forRoot({ // Configurar acesso ao banco de dados "For root" usado por toda aplicação.
       type: 'mysql', // Instrução de acesso: Banco de dados utilizado.
-      
       host: 'localhost', // Onde está o banco.
       port: 3306, // Indicando a porta.
       username: 'root', // Nome do usúario do banco de dados.
       password: 'root', // Senha do banco de dados.
       database: 'db_blogpessoal', // Nome do banco de dados.
       entities: [Postagem, Tema, Usuario], // Array com a classe model, "Postagem" é a tabela criada no banco de dados.
+      autoLoadEntities: true, // Adicionar as entidades automáticamente. 
       synchronize: true, // Propriedade que sincroniza o sistema com o banco de dados.
       logging: true, // Visualizar a consulta sql no terminal.
     }),
