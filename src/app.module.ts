@@ -7,25 +7,26 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { Usuario } from './usuario/entities/usuario.entity';
 import { UsuarioModule } from './usuario/usuario.module';
+import { AppController } from './app.controller';
+import { ProdService } from './data/services/prod.service';
+import { ConfigModule } from '@nestjs/config';
+import { DevService } from './data/services/dev.service';
 
 // Criando módulo de postagem para ter acesso a controladora. Na classe Main é utilizada essa classe para construir o projeto, precisa registrar todos os módulos para funcionar.
 @Module({
   imports: [
-    TypeOrmModule.forRoot({ // Configurar acesso ao banco de dados "For root" usado por toda aplicação.
-      type: 'mysql', // Instrução de acesso: Banco de dados utilizado.
-      host: 'localhost', // Onde está o banco.
-      port: 3306, // Indicando a porta.
-      username: 'root', // Nome do usúario do banco de dados.
-      password: 'root', // Senha do banco de dados.
-      database: 'db_blogpessoal', // Nome do banco de dados.
-      entities: [Postagem, Tema, Usuario], // Array com a classe model, "Postagem" é a tabela criada no banco de dados.
-      autoLoadEntities: true, // Adicionar as entidades automáticamente. 
-      synchronize: true, // Propriedade que sincroniza o sistema com o banco de dados.
-      logging: true, // Visualizar a consulta sql no terminal.
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      useClass: ProdService, // DevService para rodar local.
+      imports: [ConfigModule],
     }),
-    PostagemModule, TemaModule, AuthModule, UsuarioModule // Registro das classes para o nest reconhecer.
+    PostagemModule, 
+    TemaModule, 
+    AuthModule, 
+    UsuarioModule // Registro das classes para o nest reconhecer.
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
+
